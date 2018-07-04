@@ -1,0 +1,104 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}ArguminSci{% endblock %}
+
+{% block styles %}
+{{super()}}
+  <link rel="stylesheet" href="{{url_for('.static', filename='extension.css')}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+    <script type="text/javascript" src="{{url_for('.static', filename='extension.js')}}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">ArguminSci</h1>
+        <p class="lead">Analyze Argumentation and Discourse Structure in Scientific Writing.</p>
+        <hr class="my-4">
+        <p>Just copy your text in the input field below and let our model compute.</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if error %}
+    <div class="alert alert-warning" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
+    {% if result %}
+<div class="container">
+    <div id="loader"></div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="arg-tab" data-toggle="tab" href="#arg" role="tab" aria-controls="arg" aria-selected="true">Argument Components</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#dis" role="tab" aria-controls="profile" aria-selected="false">Discourse Categories</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="arg" role="tabpanel" aria-labelledby="home-tab">
+        {% if result %}
+        <div class="row">
+            <p class="col-md-10">
+                {{result|safe}}
+            </p>
+            <div class="container col-md-2">
+                <h4><span class="badge own_claim" data-toggle="tooltip" data-placement="right" title="An argumentative statement about own work, covered by the publication itself.">Own Claim</span></h4>
+                <h4><span class="badge background_claim" data-toggle="tooltip" data-placement="right" title="An argumentative statement related to the work of other authors, state-of-the-art methods, or common practices.">Background Claim</span></h4>
+                <h4><span class="badge data" data-toggle="tooltip" data-placement="right" title="A fact that the authors state as evidence that either supports or contradicts a claim.">Data</span></h4>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="profile-tab">
+            {% if result %}
+        <div class="row">
+            <p class="col-md-10">
+                {{result|safe}}
+            </p>
+            <div class="container col-md-2">
+                <h4><span class="badge background" data-toggle="tooltip" data-placement="right" title="This category represents information, which is helpful for understanding the situation or problem that is the subject of the pblication.">Background</span></h4>
+                <h4><span class="badge challenge" data-toggle="tooltip" data-placement="right" title="The current situation faced by the researcher (Problem Statement, Motivation, Goal,..).">Challenge</span></h4>
+                <h4><span class="badge approach" data-toggle="tooltip" data-placement="right" title="Information related to HOW the investigation is carried out (Model, Experiment, Method,..).">Approach</span></h4>
+                <h4><span class="badge outcome" data-toggle="tooltip" data-placement="right" title="This category represents information, which is related to the authors findings (Results, Discussion, Conclusion, Contribution).">Outcome</span></h4>
+                <h4><span class="badge future_work" data-toggle="tooltip" data-placement="right" title="Suggestions for further research.">Future Work</span></h4>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+    <form method="post" action="/predict">
+        <textarea id="text" rows="10" name="text" placeholder="Insert scientific text here.."  class="col-md-12"></textarea>
+
+        {#
+        {{% if progress %}
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow={{progress}} aria-valuemin="0" aria-valuemax="100"  style="width:" + {{ progress }} + "%"></div>
+        </div>f
+        {% endif %}
+        #}
+
+        <button type="submit" class="btn btn-outline-primary btn-lg btn-block" onclick="showLoader();">Submit</button>
+    </form>
+</div>
+
+
+ <footer class="sticky">
+      <div class="container">
+          <img src="./static/00_UM_Dachmarke_EN_RGB-scale.png" style="height:60px" alt="Data and Web Science Research Group, University of Mannheim">
+          <a href="https://dws.informatik.uni-mannheim.de/en/people/researchers/anne-lauscher/">
+            <span class="text-muted">© Anne Lauscher, Data & Web Science Research Group</span>
+          </a>
+      </div>
+ </footer>
+{% endblock %}
