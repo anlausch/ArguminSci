@@ -28,7 +28,7 @@
         {{error}}
     </div>
     {% endif %}
-    {% if result %}
+    {% if argumentation %}
 <div class="container">
     <div id="loader"></div>
 
@@ -43,10 +43,10 @@
 
 <div class="tab-content">
     <div class="tab-pane fade show active" id="arg" role="tabpanel" aria-labelledby="home-tab">
-        {% if result %}
+        {% if argumentation %}
         <div class="row">
             <p class="col-md-10">
-                {{result|safe}}
+                {{argumentation|safe}}
             </p>
             <div class="container col-md-2">
                 <h4><span class="badge own_claim" data-toggle="tooltip" data-placement="right" title="An argumentative statement about own work, covered by the publication itself.">Own Claim</span></h4>
@@ -58,10 +58,10 @@
     </div>
 
     <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="profile-tab">
-            {% if result %}
+            {% if discourse %}
         <div class="row">
             <p class="col-md-10">
-                {{result|safe}}
+                {{discourse|safe}}
             </p>
             <div class="container col-md-2">
                 <h4><span class="badge background" data-toggle="tooltip" data-placement="right" title="This category represents information, which is helpful for understanding the situation or problem that is the subject of the pblication.">Background</span></h4>
@@ -84,7 +84,7 @@
         {{% if progress %}
         <div class="progress">
             <div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow={{progress}} aria-valuemin="0" aria-valuemax="100"  style="width:" + {{ progress }} + "%"></div>
-        </div>f
+        </div>
         {% endif %}
         #}
 
@@ -97,7 +97,7 @@
       <div class="container">
           <img src="./static/00_UM_Dachmarke_EN_RGB-scale.png" style="height:60px" alt="Data and Web Science Research Group, University of Mannheim">
           <a href="https://dws.informatik.uni-mannheim.de/en/people/researchers/anne-lauscher/">
-            <span class="text-muted">© Anne Lauscher, Data & Web Science Research Group</span>
+            <span class="text-muted">© Data & Web Science Research Group</span>
           </a>
       </div>
  </footer>
