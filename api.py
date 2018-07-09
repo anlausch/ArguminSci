@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, redirect, url_for, Response
 from logging.handlers import RotatingFileHandler
 from time import strftime
@@ -41,8 +43,6 @@ def connect_spans(result):
     return new_result
 
 
-
-
 def assign_style_classes(label):
     # map the inputs to the function blocks
     options = {
@@ -59,9 +59,26 @@ def assign_style_classes(label):
         "DRI_Background": "background",
         "DRI_FutureWork": "future_work",
         "DRI_Unspecified": "",
+        "COMMON_PRACTICE": "common_practice",
+        "NOVELTY": "novelty",
+        "ADVANTAGE": "advantage",
+        "DISADVANTAGE": "disadvantage",
+        "ADVANTAGE_DISADVANTAGE": "advantage_disadvantage",
+        "DISADVANTAGE_ADVANTAGE": "disadvantage_advantage",
+        "LIMITATION": "limitation",
+        "BEGIN_CIT_CONTEXT\n": "context",
+        "INSIDE_CIT_CONTEXT\n": "context",
+        "TOTALLY_IRRELEVANT": "totally_irrelevant",
+        "SHOULD_NOT_APPEAR": "should_not_appear",
+        "VERY_RELEVANT": "very_relevant",
+        "RELEVANT": "relevant",
+        "MAY_APPEAR": "may_appear",
+        "NONE": "",
+        "NONE\n": "",
         "": ""
     }
     return options[label]
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -75,23 +92,44 @@ def predict():
 
             argumentation = server.argumentation.predict(text=text)
             discourse = server.discourse.predict(text=text)
+            aspect = server.aspect.predict(text=text)
+            citation = server.citation.predict(text=text)
+            summary = server.summary.predict(text=text)
 
             logger.info("Argumentation: " + json.dumps(argumentation))
             logger.info("Discourse: " + json.dumps(discourse))
+            logger.info("Aspect: " + json.dumps(aspect))
+            logger.info("Citation: " + json.dumps(citation))
+            logger.info("Summary: " + json.dumps(summary))
 
             argumentation = connect_spans(argumentation)
             discourse = connect_spans(discourse)
+            aspect = connect_spans(aspect)
+            citation = connect_spans(citation)
+            summary = connect_spans(summary)
 
             argumentation = [['<span class="' + word_label[1] + '">' + str(word_label[0]) + '</span>' for j, word_label in enumerate(sentence)] for i, sentence in enumerate(argumentation)]
+            citation = [['<span class="' + word_label[1] + '">' + str(word_label[0]) + '</span>' for j, word_label in
+                 enumerate(sentence)] for i, sentence in enumerate(citation)]
             discourse = [['<span class="' + word_label[1] + '">' + str(word_label[0]) + '</span>' for j, word_label in
                        enumerate(sentence)] for i, sentence in enumerate(discourse)]
+            aspect = [['<span class="' + word_label[1] + '">' + str(word_label[0]) + '</span>' for j, word_label in
+                       enumerate(sentence)] for i, sentence in enumerate(aspect)]
+            summary = [['<span class="' + word_label[1] + '">' + str(word_label[0]) + '</span>' for j, word_label in
+                       enumerate(sentence)] for i, sentence in enumerate(summary)]
 
             discourse = [''.join(sentence) for sentence in discourse]
+            aspect = [''.join(sentence) for sentence in aspect]
             argumentation = [''.join(sentence) for sentence in argumentation]
+            citation = [''.join(sentence) for sentence in citation]
+            summary = [''.join(sentence) for sentence in summary]
 
             argumentation = ' '.join(argumentation)
             discourse = ' '.join(discourse)
-            return render_template("index.html", argumentation=argumentation, discourse=discourse)
+            aspect = ' '.join(aspect)
+            citation = ' '.join(citation)
+            summary = ' '.join(summary)
+            return render_template("index.html", argumentation=argumentation, discourse=discourse, aspect=aspect, citation=citation, summary=summary)
 
         else:
             text = request.form["text"]
@@ -100,9 +138,23 @@ def predict():
                 return Response(json.dumps({'message': 'Please provide textual data'}), status=400, mimetype='application/json')
             else:
                 logger.info("Data: " + text)
-                result = serve.predict(text=text, embd_vocab=server.embd_vocab, model=server.model)
-                app.logger.info("Result: " + json.dumps(result))
-                return Response(json.dumps({'result': result}), status=200, mimetype='application/json')
+                argumentation = server.argumentation.predict(text=text)
+                discourse = server.discourse.predict(text=text)
+                aspect = server.aspect.predict(text=text)
+                citation = server.citation.predict(text=text)
+                summary = server.summary.predict(text=text)
+
+                logger.info("Argumentation: " + json.dumps(argumentation))
+                logger.info("Discourse: " + json.dumps(discourse))
+                logger.info("Aspect: " + json.dumps(aspect))
+                logger.info("Citation: " + json.dumps(citation))
+                logger.info("Summary: " + json.dumps(summary))
+
+                return Response(json.dumps({'argumentation': argumentation,
+                                            'discourse':discourse,
+                                            'aspect': aspect,
+                                            'citation': citation,
+                                            'summary': summary}), status=200, mimetype='application/json')
     except Exception as e:
         return str(e)
 
@@ -150,7 +202,7 @@ def exceptions(e):
 
 
 if __name__ == '__main__':
-    server = Server(discourse=serve.Model("discourse"), argumentation=serve.Model("argumentation"))
+    server = Server(discourse=serve.Model("discourse"), argumentation=serve.Model("argumentation"), aspect=serve.Model("aspect"), citation=serve.Model("citation"), summary=serve.Model("summary"))
 
     handler = RotatingFileHandler('./log/app.log', maxBytes=10000, backupCount=3)
     logger = logging.getLogger(__name__)

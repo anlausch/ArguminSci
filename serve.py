@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import tensorflow as tf
 import numpy as np
 import os
@@ -20,9 +22,9 @@ class Model:
             self.input_tensor = self.graph.get_tensor_by_name('input_x:0')
             self.dropout_keep_prob_tensor = self.graph.get_tensor_by_name('dropout_keep_prob:0')
             self.sequence_lengths_tensor = self.graph.get_tensor_by_name('Placeholder:0')
-            if type == "argumentation":
+            if type == "argumentation" or type == "citation":
                 self.arg_max = self.graph.get_tensor_by_name("arg_prediction/ArgMax:0")
-            elif type == "discourse":
+            else:
                 self.arg_max = self.graph.get_tensor_by_name("auxiliary_prediction/ArgMax:0")
 
             self.embedding_dict, self.embedding_vocab = self.load_embeddings(self.path)
@@ -48,7 +50,7 @@ class Model:
                 if parts[0] == "main labels":
                     labels = eval(parts[1])
                     break
-            if self.type == "argumentation":
+            if self.type == "argumentation" or self.type == "citation":
                 for i,sentence in enumerate(predictions):
                     string_predictions.append([])
                     for j,token in enumerate(sentence):
@@ -93,11 +95,13 @@ class Model:
         sequence_lengths = [len(sentence) for sentence in x]
         if pad:
             ind_pad = self.embedding_vocab[pad_token]
-            if self.type == "argumentation":
+            if self.type == "argumentation" or self.type=="aspect" or self.type=="citation" \
+                    or self.type == "summary":
                 max_len = 167 #max([len(t) for t in x])
             else:
                 max_len = 1343
             x = [t + [ind_pad] * (max_len - len(t)) for t in x]
+            x = [sentence[:max_len] for sentence in x]
             real_length = len(x)
             while len(x) % 16 != 0:
                 x.append([ind_pad for i in range(max_len)])
@@ -161,7 +165,7 @@ class Model:
         labels = [item for sublist in labels for item in sublist]
         index_to_word = {v: k for k, v in self.embedding_vocab.items()}
         labels = self.assign_labels(labels)
-        if type == "argumentation":
+        if type == "argumentation" or type == "citation":
             result = [[[index_to_word[word], labels[i][j]] for j, word in enumerate(sentence) if j < sequence_lengths[i]] for i, sentence in
                       enumerate(input) if i < real_length]
         else:

@@ -18,6 +18,21 @@ body {
 .outcome{background-color: #81d4fa;}
 .future_work{background-color: #ef9a9a;}
 
+.limitation{background-color: #a5d6a7;}
+.novelty{background-color: #ce93d8;}
+.advantage{background-color: #ffcc80;}
+.disadvantage{background-color: #81d4fa;}
+.advantage_disadvantage{background-color: #ef9a9a;}
+.disadvantage_advantage{background-color: #9fa8da;}
+.common_practice{background-color: #fff59d;}
+
+.context{background-color: #a5d6a7;}
+
+.totally_irrelevant{background-color: #a5d6a7;}
+.should_not_appear{background-color: #ce93d8;}
+.may_appear{background-color: #ffcc80;}
+.relevant{background-color: #81d4fa;}
+.very_relevant{background-color: #ef9a9a;}
 
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */

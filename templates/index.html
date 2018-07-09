@@ -3,12 +3,12 @@
 
 {% block styles %}
 {{super()}}
-  <link rel="stylesheet" href="{{url_for('.static', filename='extension.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='extension.css')}}">
 {% endblock %}
 
 {% block scripts %}
 {{super()}}
-    <script type="text/javascript" src="{{url_for('.static', filename='extension.js')}}"></script>
+<script type="text/javascript" src="{{url_for('.static', filename='extension.js')}}"></script>
 {% endblock %}
 
 
@@ -29,76 +29,172 @@
     </div>
     {% endif %}
     {% if argumentation %}
-<div class="container">
-    <div id="loader"></div>
+    <div class="container">
+        <div id="loader"></div>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="arg-tab" data-toggle="tab" href="#arg" role="tab" aria-controls="arg" aria-selected="true">Argument Components</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#dis" role="tab" aria-controls="profile" aria-selected="false">Discourse Categories</a>
-  </li>
-</ul>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="arg-tab" data-toggle="tab" href="#arg" role="tab" aria-controls="arg"
+                   aria-selected="true">Argument Components</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="dis-tab" data-toggle="tab" href="#dis" role="tab" aria-controls="dis"
+                   aria-selected="false">Discourse Categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="asp-tab" data-toggle="tab" href="#asp" role="tab" aria-controls="asp"
+                   aria-selected="false">Subjective Aspects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cit-tab" data-toggle="tab" href="#cit" role="tab" aria-controls="cit"
+                   aria-selected="false">Citation Contexts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="sum-tab" data-toggle="tab" href="#sum" role="tab" aria-controls="sum"
+                   aria-selected="false">Summary Relevance</a>
+            </li>
+        </ul>
 
-<div class="tab-content">
-    <div class="tab-pane fade show active" id="arg" role="tabpanel" aria-labelledby="home-tab">
-        {% if argumentation %}
-        <div class="row">
-            <p class="col-md-10">
-                {{argumentation|safe}}
-            </p>
-            <div class="container col-md-2">
-                <h4><span class="badge own_claim" data-toggle="tooltip" data-placement="right" title="An argumentative statement about own work, covered by the publication itself.">Own Claim</span></h4>
-                <h4><span class="badge background_claim" data-toggle="tooltip" data-placement="right" title="An argumentative statement related to the work of other authors, state-of-the-art methods, or common practices.">Background Claim</span></h4>
-                <h4><span class="badge data" data-toggle="tooltip" data-placement="right" title="A fact that the authors state as evidence that either supports or contradicts a claim.">Data</span></h4>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="arg" role="tabpanel" aria-labelledby="home-tab">
+                {% if argumentation %}
+                <div class="row">
+                    <p class="col-md-10">
+                        {{argumentation|safe}}
+                    </p>
+                    <div class="container col-md-2">
+                        <h4><span class="badge own_claim" data-toggle="tooltip" data-placement="right"
+                                  title="An argumentative statement about own work, covered by the publication itself.">Own Claim</span>
+                        </h4>
+                        <h4><span class="badge background_claim" data-toggle="tooltip" data-placement="right"
+                                  title="An argumentative statement related to the work of other authors, state-of-the-art methods, or common practices.">Background Claim</span>
+                        </h4>
+                        <h4><span class="badge data" data-toggle="tooltip" data-placement="right"
+                                  title="A fact that the authors state as evidence that either supports or contradicts a claim.">Data</span>
+                        </h4>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="profile-tab">
+                {% if discourse %}
+                <div class="row">
+                    <p class="col-md-10">
+                        {{discourse|safe}}
+                    </p>
+                    <div class="container col-md-2">
+                        <h4><span class="badge background" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which is helpful for understanding the situation or problem that is the subject of the pblication.">Background</span>
+                        </h4>
+                        <h4><span class="badge challenge" data-toggle="tooltip" data-placement="right"
+                                  title="The current situation faced by the researcher (Problem Statement, Motivation, Goal,..).">Challenge</span>
+                        </h4>
+                        <h4><span class="badge approach" data-toggle="tooltip" data-placement="right"
+                                  title="Information related to HOW the investigation is carried out (Model, Experiment, Method,..).">Approach</span>
+                        </h4>
+                        <h4><span class="badge outcome" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which is related to the authors findings (Results, Discussion, Conclusion, Contribution).">Outcome</span>
+                        </h4>
+                        <h4><span class="badge future_work" data-toggle="tooltip" data-placement="right"
+                                  title="Suggestions for further research.">Future Work</span></h4>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="asp" role="tabpanel" aria-labelledby="profile-tab">
+                {% if aspect %}
+                <div class="row">
+                    <p class="col-md-10">
+                        {{aspect|safe}}
+                    </p>
+                    <div class="container col-md-2">
+                        <h4><span class="badge common_practice" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which is related to common practice in the respective research field.">Common Practice</span>
+                        </h4>
+                        <h4><span class="badge novelty" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information which is related to a novelty of a work.">Novelty</span>
+                        </h4>
+                        <h4><span class="badge limitation" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information which is related to limitations of approaches or methods.">Limitation</span>
+                        </h4>
+                        <h4><span class="badge advantage" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which introduces an advantage.">Advantage</span>
+                        </h4>
+                        <h4><span class="badge disadvantage" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which introduces a disadvantage.">Disadvantage</span>
+                        </h4>
+                        <h4><span class="badge advantage_disadvantage" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which introduces an advantage and a disadvantage.">Adv. & Disadv.</span>
+                        </h4>
+                        <h4><span class="badge disadvantage_advantage" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information, which introduces a disadvantage and an advantage.">Disadv. & Adv.</span>
+                        </h4>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="cit" role="tabpanel" aria-labelledby="profile-tab">
+                {% if citation %}
+                <div class="row">
+                    <p class="col-md-10">
+                        {{citation|safe}}
+                    </p>
+                    <div class="container col-md-2">
+                        <h4><span class="badge context" data-toggle="tooltip" data-placement="right"
+                                  title="The context of a citation.">Citation Context</span></h4>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="sum" role="tabpanel" aria-labelledby="summary-tab">
+                {% if summary %}
+                <div class="row">
+                    <p class="col-md-10">
+                        {{summary|safe}}
+                    </p>
+                    <div class="container col-md-2">
+                        <h4><span class="badge very_relevant" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information that is very relevant for a summary.">Very Relevant</span>
+                        </h4>
+                        <h4><span class="badge relevant" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information that is relevant for a summary.">Relevant</span>
+                        </h4>
+                        <h4><span class="badge may_appear" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information that may appear in a summary.">May Appear</span>
+                        </h4>
+                        <h4><span class="badge should_not_appear" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information that should not appear in a summary.">Should Not Appear</span>
+                        </h4>
+                        <h4><span class="badge totally_irrelevant" data-toggle="tooltip" data-placement="right"
+                                  title="This category represents information that is totally irrelevant for a summary.">Totally Irrelevant</span>
+                        </h4>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
         {% endif %}
-    </div>
-
-    <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="profile-tab">
-            {% if discourse %}
-        <div class="row">
-            <p class="col-md-10">
-                {{discourse|safe}}
-            </p>
-            <div class="container col-md-2">
-                <h4><span class="badge background" data-toggle="tooltip" data-placement="right" title="This category represents information, which is helpful for understanding the situation or problem that is the subject of the pblication.">Background</span></h4>
-                <h4><span class="badge challenge" data-toggle="tooltip" data-placement="right" title="The current situation faced by the researcher (Problem Statement, Motivation, Goal,..).">Challenge</span></h4>
-                <h4><span class="badge approach" data-toggle="tooltip" data-placement="right" title="Information related to HOW the investigation is carried out (Model, Experiment, Method,..).">Approach</span></h4>
-                <h4><span class="badge outcome" data-toggle="tooltip" data-placement="right" title="This category represents information, which is related to the authors findings (Results, Discussion, Conclusion, Contribution).">Outcome</span></h4>
-                <h4><span class="badge future_work" data-toggle="tooltip" data-placement="right" title="Suggestions for further research.">Future Work</span></h4>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
 
 
-    <form method="post" action="/predict">
-        <textarea id="text" rows="10" name="text" placeholder="Insert scientific text here.."  class="col-md-12"></textarea>
-
-        {#
-        {{% if progress %}
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow={{progress}} aria-valuemin="0" aria-valuemax="100"  style="width:" + {{ progress }} + "%"></div>
-        </div>
-        {% endif %}
-        #}
-
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block" onclick="showLoader();">Submit</button>
+        <form method="post" action="/predict">
+            <textarea id="text" rows="10" name="text" placeholder="Insert scientific text here.."
+                      class="col-md-12"></textarea>
+    <button type="submit" class="btn btn-outline-primary btn-lg btn-block" onclick="showLoader();">Submit</button>
     </form>
 </div>
 
 
- <footer class="sticky">
-      <div class="container">
-          <img src="./static/00_UM_Dachmarke_EN_RGB-scale.png" style="height:60px" alt="Data and Web Science Research Group, University of Mannheim">
-          <a href="https://dws.informatik.uni-mannheim.de/en/people/researchers/anne-lauscher/">
+<footer class="sticky">
+    <div class="container">
+        <img src="./static/00_UM_Dachmarke_EN_RGB-scale.png" style="height:60px"
+             alt="Data and Web Science Research Group, University of Mannheim">
+        <a href="https://dws.informatik.uni-mannheim.de/en/">
             <span class="text-muted">© Data & Web Science Research Group</span>
-          </a>
-      </div>
- </footer>
+        </a>
+    </div>
+</footer>
 {% endblock %}
