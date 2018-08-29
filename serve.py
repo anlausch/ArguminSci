@@ -10,12 +10,13 @@ from nltk import sent_tokenize
 import pickle
 
 class Model:
-    def __init__(self, type):
+    def __init__(self, type, sentence_level=True):
         self.type = type
         self.path = os.path.join("./model", type)
         tf.reset_default_graph()
         self.graph = tf.Graph()
         self.sess = tf.Session(graph=self.graph)
+        self.sentence_level = sentence_level
         with self.graph.as_default():
             self.saver = tf.train.import_meta_graph(self.path + '/best-model.meta')
             self.saver.restore(self.sess, tf.train.latest_checkpoint(self.path))
@@ -39,7 +40,20 @@ class Model:
 
 
     def begin_of_span(self):
-        return ["Token_Label.BEGIN_BACKGROUND_CLAIM", "Token_Label.BEGIN_OWN_CLAIM", "Token_Label.BEGIN_DATA"]
+        return ["Token_Label.BEGIN_BACKGROUND_CLAIM", "Token_Label.BEGIN_OWN_CLAIM", "Token_Label.BEGIN_DATA", "BEGIN_CIT_CONTEXT\n"]
+
+    def inside_of_span(self):
+        return ["Token_Label.INSIDE_BACKGROUND_CLAIM", "Token_Label.INSIDE_OWN_CLAIM", "Token_Label.INSIDE_DATA", "INSIDE_CIT_CONTEXT\n"]
+
+    def inside_of_span(self):
+        return ["Token_Label.OUTSIDE", "NONE\n"]
+
+    #def correct_illegal_sequences(self, labels):
+    #    if self.type == "argumentation":
+    #        for i,sentence in enumerate(labels):
+    #            for j,label in enumerate(labels):
+    #                if j+1< len(labels) and label in self.inside_of_span and labels[j+1] in
+
 
 
     def assign_labels(self, predictions):
@@ -72,7 +86,7 @@ class Model:
         x = []
         punctuation_list = []
         numbers_list = []
-        removed_tokens = {}
+        removed_tokens = []
         for i in range(len(texts)):
             if i % 2 == 0:
                 print("Line: " + str(i) + " of " + str(len(texts)))
@@ -87,7 +101,7 @@ class Model:
                     numbers_list.append(token)
                     token = numbers_token
                 if token not in self.embedding_vocab and token.lower() not in self.embedding_vocab:
-                    removed_tokens[str(i) + "_" + str(j)] = token
+                    removed_tokens.append([str(i) + "_" + str(j), token])
                     continue
                 tok_list.append(self.embedding_vocab[token] if token in self.embedding_vocab else self.embedding_vocab[token.lower()])
             x.append(tok_list)
@@ -95,7 +109,7 @@ class Model:
         sequence_lengths = [len(sentence) for sentence in x]
         if pad:
             ind_pad = self.embedding_vocab[pad_token]
-            if self.type == "argumentation" or self.type=="aspect" or self.type=="citation" \
+            if self.type=="aspect" or self.type=="citation" \
                     or self.type == "summary":
                 max_len = 167 #max([len(t) for t in x])
             else:
@@ -128,20 +142,32 @@ class Model:
                 elif word_label[0] == "<NUM/>":
                     word_label[0] = numbers_list[count_nums]
                     count_nums = count_nums + 1
-        for key, value in removed_tokens.items():
-            i, j = key.split("_")
-            result[int(i)].insert(int(j), [value, "REPLACED"])
+        for removed in removed_tokens:
+            i, j = removed[0].split("_")
+            result[int(i)].insert(int(j), [removed[1], "REPLACED"])
         for i, sentence in enumerate(result):
             for j, word_label in enumerate(sentence):
                 if word_label[1] == "REPLACED":
-                    if j == 0 and j != len(sentence)-1 and sentence[j+1][1] not in self.begin_of_span():
-                        word_label[1] = sentence[j+1][1]
-                    elif j != len(sentence)-1 and sentence[j-1][1] == sentence[j+1][1] and sentence[j+1][1] not in self.begin_of_span():
-                        word_label[1] = sentence[j+1][1]
-                    elif j == len(sentence)-1 and sentence[j-1][1]:
-                        word_label[1] = sentence[j-1][1]
+                    if self.sentence_level == False:
+                        if j == 0 and j != len(sentence)-1 and sentence[j+1][1] not in self.begin_of_span():
+                            word_label[1] = sentence[j+1][1]
+                        elif j != len(sentence)-1 and sentence[j-1][1] == sentence[j+1][1] and sentence[j+1][1] not in self.begin_of_span():
+                            word_label[1] = sentence[j+1][1]
+                        elif j == len(sentence)-1 and sentence[j-1][1]:
+                            word_label[1] = sentence[j-1][1]
+                        elif j != len(sentence)-1 and sentence[j+1][0] in self.punctuation():
+                            word_label[1] = sentence[j - 1][1]
+                        else:
+                            word_label[1] = "Token_Label.OUTSIDE"
                     else:
-                        word_label[1] = "Token_Label.OUTSIDE"
+                        if j == 0 and j != len(sentence)-1 and sentence[j+1][1]:
+                            word_label[1] = sentence[j+1][1]
+                        elif j != len(sentence)-1 and sentence[j-1][1] == sentence[j+1][1] and sentence[j+1][1]:
+                            word_label[1] = sentence[j+1][1]
+                        elif j == len(sentence)-1 and sentence[j-1][1]:
+                            word_label[1] = sentence[j-1][1]
+                        else:
+                            word_label[1] = "Token_Label.OUTSIDE"
         return result
 
 
@@ -165,7 +191,7 @@ class Model:
         labels = [item for sublist in labels for item in sublist]
         index_to_word = {v: k for k, v in self.embedding_vocab.items()}
         labels = self.assign_labels(labels)
-        if type == "argumentation" or type == "citation":
+        if not self.sentence_level:
             result = [[[index_to_word[word], labels[i][j]] for j, word in enumerate(sentence) if j < sequence_lengths[i]] for i, sentence in
                       enumerate(input) if i < real_length]
         else:

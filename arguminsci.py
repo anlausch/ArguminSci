@@ -6,7 +6,7 @@ import codecs
 import serve
 import os
 
-parser = argparse.ArgumentParser(description='Analyze Argumentation and Discourse Structure in Scientific Writing.')
+parser = argparse.ArgumentParser(description='Analyze Argumentation and Rhetorical Aspects in Scientific Writing.')
 parser.add_argument('inputfile', type=str, help='The name of the textual file containing the input text.')
 parser.add_argument('outputfolder', type=str, help='The name of the output folder where the output should be stored.')
 

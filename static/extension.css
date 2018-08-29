@@ -41,8 +41,10 @@ body {
     width: 100%;
     height: 100%;
     animation: spin 2s linear infinite;
-    position: absolute
+    position: absolute;
+    bgcolor: white;
 }
+
 
 @keyframes spin {
     0% { transform: rotate(0deg); }

@@ -7,11 +7,11 @@ import traceback
 import logging
 from flask_bootstrap import Bootstrap
 import serve
-from werkzeug.utils import secure_filename
+import sys
 import json
 
-UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = set(['txt'])
+#UPLOAD_FOLDER = './uploads'
+#ALLOWED_EXTENSIONS = set(['txt'])
 
 class Server:
     def __init__(self, **kwds):
@@ -19,13 +19,13 @@ class Server:
 
 server = Server()
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 Bootstrap(app)
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#def allowed_file(filename):
+#    return '.' in filename and \
+#           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def connect_spans(result):
     new_result = []
@@ -202,8 +202,13 @@ def exceptions(e):
 
 
 if __name__ == '__main__':
-    server = Server(discourse=serve.Model("discourse"), argumentation=serve.Model("argumentation"), aspect=serve.Model("aspect"), citation=serve.Model("citation"), summary=serve.Model("summary"))
-
+    if len(sys.argv) >1 and sys.argv[1] == 'SENTENCE_LEVEL':
+        print("Providing only sentence-level predictions")
+        server = Server(discourse=serve.Model("discourse"), argumentation=serve.Model("argumentation"), aspect=serve.Model("aspect"), citation=serve.Model("citation"), summary=serve.Model("summary"))
+    else:
+        print("Providing sentence-level and token-level predictions")
+        server = Server(discourse=serve.Model("discourse"), argumentation=serve.Model("argumentation", sentence_level=False),
+                        aspect=serve.Model("aspect"), citation=serve.Model("citation"), summary=serve.Model("summary"))
     handler = RotatingFileHandler('./log/app.log', maxBytes=10000, backupCount=3)
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
