@@ -13,7 +13,7 @@ parser.add_argument('outputfolder', type=str, help='The name of the output folde
 parser.add_argument("--argumentation", help="Extract argument components.", action="store_true")
 parser.add_argument("--discourse", help="Analyze discourse roles.", action="store_true")
 parser.add_argument("--aspect", help="Analyze subjective aspects.", action="store_true")
-parser.add_argument("--citation", help="Extract citation contexts", action="store_true")
+parser.add_argument("--citation", help="Extract citation contexts.", action="store_true")
 parser.add_argument("--summary", help="Assign summary relevance.", action="store_true")
 
 args = parser.parse_args()
