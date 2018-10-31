@@ -1,0 +1,3 @@
+#we want to commit log folder but not log files, so we commit this gitignore
+*
+!.gitignore
