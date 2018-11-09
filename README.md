@@ -1,6 +1,8 @@
 # ArguminSci
 Analyze Argumentation and other Rhetorical Aspects in Scientific Writing.
 
+A running Demo of ArguminSci can be found at http://lelystad.informatik.uni-mannheim.de/.
+
 Here you can find the code necessary to deploy ArguminSci. A detailed description of the tool can be found in the accompanying publication [1].
 
 
