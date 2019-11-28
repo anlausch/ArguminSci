@@ -120,7 +120,7 @@ class Model:
             while len(x) % 16 != 0:
                 x.append([ind_pad for i in range(max_len)])
                 sequence_lengths.append(0)
-
+            sequence_lengths = [l if l <= max_len else max_len for l in sequence_lengths]
         return np.array(x, dtype=np.int32), np.array(sequence_lengths, dtype=np.int32), np.array(punctuation_list), \
                np.array(numbers_list), removed_tokens, real_length
 
