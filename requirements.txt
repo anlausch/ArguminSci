@@ -1,6 +1,6 @@
 numpy==1.14.3
 tensorflow==1.10.1
-nltk==3.3
+nltk==3.4.5
 Flask==1.0.2
 Flask-Bootstrap4==4.0.2
 gensim==3.6.0
