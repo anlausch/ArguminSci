@@ -73,7 +73,7 @@ if args.citation:
         output.write(str(citation))
         output.close()
 if args.summary:
-    with codecs.open(os.paths.join(args.outputfolder, "summary.txt"), "w", "utf8") as output:
+    with codecs.open(os.path.join(args.outputfolder, "summary.txt"), "w", "utf8") as output:
         output.write(str(summary))
         output.close()
 print("Saved output in " + args.outputfolder)
