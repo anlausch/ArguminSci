@@ -1,8 +1,6 @@
 # ArguminSci
 Analyze Argumentation and other Rhetorical Aspects in Scientific Writing.
 
-A running Demo of ArguminSci can be found at http://lelystad.informatik.uni-mannheim.de/.
-
 Here you can find the code necessary to deploy ArguminSci. A detailed description of the tool can be found in the accompanying publication [1].
 
 
@@ -26,11 +24,10 @@ Arguminsci
 The models are all trained on the extended version of the Dr. Inventor Corpus [2,3,4].
 
 
+Please cite the corresponding publication in case you make use of our tools. 
 
-Please cite the corresponding publication in case you make use of our tools. Links will be added asap.
-
-[1] Anne Lauscher, Goran Glavaˇs, and Kai Eckert. 2018. ArguminSci: A Tool for Analyzing Argumentation and Rhetorical Aspects in Scientific Writing. 
-In Proceedings of the 5th Workshop on Mining Argumentation, **to appear**, Brussels, Belgium. Association for Computational Linguistics.
+[1] Anne Lauscher, Goran Glavaˇs, and Kai Eckert. 2018. ArguminSci: A Tool for Analyzing Argumentation and Rhetorical Aspects in Scientific Writing. https://www.aclweb.org/anthology/W18-5203/
+In Proceedings of the 5th Workshop on Mining Argumentation, 22–28, Brussels, Belgium. Association for Computational Linguistics.
 ```
 @inproceedings{lauscher2018a,
   title = {ArguminSci: A Tool for Analyzing Argumentation and Rhetorical Aspects in Scientific Writing},
@@ -39,12 +36,12 @@ In Proceedings of the 5th Workshop on Mining Argumentation, **to appear**, Bruss
   author = {Lauscher, Anne and Glava\v{s}, Goran and Eckert, Kai},
   address = {Brussels, Belgium},
   year = {2018},
-  pages = {to appear}
+  pages = {22–28}
 }
 ```
 
-[2] Anne Lauscher, Goran Glavaˇs, and Simone Paolo Ponzetto. 2018. An argument-annotated corpus of scientific publications. 
-In Proceedings of the 5th Workshop on Mining Argumentation, **to appear**, Brussels, Belgium. Association for Computational Linguistics.
+[2] Anne Lauscher, Goran Glavaˇs, and Simone Paolo Ponzetto. 2018. An argument-annotated corpus of scientific publications. https://www.aclweb.org/anthology/W18-5206/ 
+In Proceedings of the 5th Workshop on Mining Argumentation, 40–46, Brussels, Belgium. Association for Computational Linguistics.
 ```
 @inproceedings{lauscher2018b,
   title = {An argument-annotated corpus of scientific publications},
@@ -53,7 +50,7 @@ In Proceedings of the 5th Workshop on Mining Argumentation, **to appear**, Bruss
   author = {Lauscher, Anne and Glava\v{s}, Goran and Ponzetto, Simone Paolo},
   address = {Brussels, Belgium},
   year = {2018},
-  pages = {to appear}
+  pages = {40–46}
 }
 ```
 
